@@ -18,28 +18,24 @@ def home():
         'index.html',
         title='I Know That Feel'
     )
-globalName=""
-globalID=0
-count=0
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
         name_cursor=g.db.execute('select username from users where username=?',[request.form['username']])
         password_cursor = g.db.execute('select password from users where username=?',[request.form['username']])
-        name=name_cursor.fetchone()
-        password=password_cursor.fetchone()
-        print name[0]
-        print password[0]
-        if name[0] is None:
+
+        if name_cursor.fetchone() is not None:
+            name=name_cursor.fetchone()[0]
+            password=password_cursor.fetchone()[0]
+
+        if name_cursor.fetchone() is None:
             error = 'Invalid username'
-        elif password[0] != request.form['password']:
+        elif password != request.form['password']:
             error = 'Invalid password'
         else:
             session['logged_in'] = True
-            globalName=name[0]
-            globalID=(g.db.execute('select id from users where username=?',[name[0]])).fetchone()[0]
-            print globalID
             flash('You were logged in')
             return redirect(url_for('home'))
     return render_template('login.html', error=error)
@@ -62,30 +58,25 @@ def new_user():
         return redirect(url_for('home'))
     return render_template('new_user.html')
 
-@app.route('/game', methods = ['GET','POST'])
+@app.route('/game')
 def game():
-    if request.method=='POST':
-        g.db.execute('insert into playthrough (score,playerid) values (?,?)',[count,globalID])
-        g.db.commit()
-        return render_template('index.html')
-    else:
-    	"""Renders the game page."""
-    	count = int(request.args["count"])
-    	emotions = ["Happy",  "Sad", "Angry", "Fear", "Surprise"]
-    	r = randint(0, len(emotions))
+	"""Renders the game page."""
+	count = int(request.args["count"])
+	emotions = ["Happy",  "Sad", "Angry", "Fear", "Surprise"]
+	r = randint(0, len(emotions)) 
 
-    	if count <= 10:
-    		return render_template(
-    			'game.html',
-    			count=count,
-    			emotion=emotions[r]
-    			)
-    	else:
-    		return redirect('/home')
+	if count <= 10:
+		return render_template(
+			'game.html',
+			count=count,
+			emotion=emotions[r]
+			)
+	else:
+		return redirect('/home')
 
 @app.route('/indico', methods=['POST'])
 def indico():
-	indicoio.config.api_key = "3e19af4454ebe0932333aff84913d88d"
+	indicoio.config.api_key = "3e19af4454ebe0932333aff84913d88d"	
 	gameCount = request.form["gameCount"]
 	emotion = request.form["emotion"]
 	photoUrl = request.form["photoUrl"]
@@ -104,7 +95,7 @@ def indico():
 
 	for highestKey in highestKeys:
 		if (highestKey == "Happy" or highestKey == "Neutral" and highestValsKey == "happyVal") or (highestKey == "Sad" or highestKey == "Angry" and highestValsKey == "sadVal") or (highestKey == "Fear" or highestKey == "Surprise" and highestValsKey == "fearVal"):
-			if highestKey == emotion:
+			if highestKey == emotion:	
 				result["feedback"] = "You are correct!"
 			else:
 				result["feedback"] = "Not quite - try again!"
@@ -114,3 +105,4 @@ def indico():
 	highestKey = highestKeys[0]
 	result[highestKey] = emotions[highestKey]
 	return jsonify(result)
+
