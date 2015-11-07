@@ -11,5 +11,10 @@
 <body>
     <h1>{{ title }}</h1>
     <p>Welcome to our app!</p>
+    {% if not session.logged_in %}
+      <a href="{{ url_for('login') }}">log in</a>
+      <a href="{{url_for('new_user')}}">make new user</a>
+    {% else %}
+      <a href="{{ url_for('logout') }}">logout</a>
+    {% endif %}
 </body>
-
