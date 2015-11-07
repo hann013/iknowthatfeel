@@ -11,14 +11,21 @@
 
 <body>
     <div class="container" id="main">
-        <div class="video">
-        	<h1>Game {{ count }}</h1>
-        	<video id="webcam" width="400" height="300"></video>
-            <canvas id="canvas" style="display:none;" width="500" height="400"></canvas>
-        	<img id="photo" style="display:none;" src="" width="400" height="300" />
+        <h1>Game {{ count }}</h1>
+        <h2>Show us the feeling: {{ emotion }}</h2>
+        <div class="photo"> 
+            <p id="feedback"></p>
+            <canvas id="canvas" style="display:none;"></canvas>
+            <img id="photo" style="display:none;" src="" />
         </div>
         <div id="buttons">
-            <button class="btn btn-default" id="take-picture" onclick="takePicture()">Take photo {{ url }}</button>
+            <a class="btn btn-default" id="next-level" href="/game?count={{ count + 1 }}">Next level</a>
+         </div>
+        <div class="video">
+        	<video id="webcam" width="400" height="300"></video>
+        </div>
+        <div class="buttons">
+            <button class="btn btn-default" id="take-picture" onclick="takePicture()">Take photo</button>
         </div>
     </div>
 </body>
@@ -81,15 +88,25 @@
     function takePicture() {
         var context = canvas.getContext("2d");
         context.drawImage(video, 0, 0, width, height);
-        photo.src = canvas.toDataURL("image/png");
+        var photoUrl = canvas.toDataURL("image/png");
+        photo.src = photoUrl;
 
         photo.style.display = "inline";
         video.style.display = "none";
         button.style.display = "none";
 
-        $.post("/indico", { photoUrl: canvas.toDataURL("image/png") })
+        var url = "/indico"
+        var params = {
+            gameCount : {{ count }},
+            emotion : "{{ emotion }}",
+            photoUrl: photoUrl,
+        }
+
+        $.post(url, params)
           .done(function(data) {
-            console.log(data);
+            $("#feedback").text(data["feedback"]);
+            video.style.display = "inline";
+            button.style.display = "inline";
         });       
     };
 </script>
