@@ -9,36 +9,61 @@
 </head>
 
 <body>
+  <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display
+    <div class="navbar-header"><a class="navbar-brand" href="#">{{title}}</a></div>
+    -->
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="#">About the Project</a></li>
+        <li><a href="{{url_for('new_user')}}">Create Account</a></li>
+        {% if session.logged_in %}
+          <li><a href="/game?count=1">Play 10 rounds</a></li>
+        {% endif %}
+      </ul>
 
-    <h1>{{ title }}</h1>
-    <p>Welcome to our app!</p>
-    {% if not session.logged_in %}
-      <a href="{{ url_for('login') }}">log in</a>
-      <a href="{{url_for('new_user')}}">make new user</a>
-    {% else %}
-      <a href="{{ url_for('logout') }}">logout</a>
-    {% endif %}
-    <div class="jumbotron" {
-  	position: relative;
-      background: #000 url("jumbotron-bg.png") center center;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      overflow: hidden;}>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          {% if not session.logged_in %}
+            <a href="{{ url_for('login') }}">log in</a>
+          {% else %}
+            <a href="{{ url_for('logout') }}">logout</a>
+          {% endif %}
+      </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
 
-      <h1>{{ title }}<h1>
+<div class="container">
+  <div class="jumbotron" {
+  position: relative;
+    background: #000 url("jumbotron-bg.png") center center;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    overflow: hidden;}>
 
-  	</div>
-      <p>Can you mimic the emotion on the face you see?</p>
-      <p>Someone who is on the autistic spectrum might not be able to do so, leading to difficulty in communicating empathy to others.</p>
-      <p> This game is intended to help kids and adults on the spectrum differentiate between and demonstrate different emotional expressions,</p>
-      <a href="/game?count=1" class="btn btn-default">Play 10 rounds</a>
+    <h1>{{ title }}<h1>
 
-      <div class="media">
-    <div class="media-middle media-middle">
-      <a href="#">
-        <img class="media-object" src="http://churchm.ag/wp-content/uploads/2012/02/I-know-that-feel-bro-tights-620x620.jpg" alt="...">
-      </a>
-    </div>
   </div>
+    <p>Can you mimic the emotion on the face you see?</p>
+    <p>Someone who is on the autistic spectrum might not be able to do so, leading to difficulty in communicating empathy to others.</p>
+    <p> This game is intended to help kids and adults on the spectrum differentiate between and demonstrate different emotional expressions,</p>
+
+    <div class="media">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+        <div class="media-middle media-middle">
+          <a href="#">
+            <img class="media-object" src="http://churchm.ag/wp-content/uploads/2012/02/I-know-that-feel-bro-tights-620x620.jpg" alt="...">
+          </a>
+        </div>
+      </div>
+    </div>
+    </div>
+</div>
+
 </body>

@@ -7,9 +7,6 @@ from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
 from contextlib import closing
 from IKnowThatFeel import app
-#from Models import User
-from flask import render_template, request, redirect
-from IKnowThatFeel import app
 import indicoio, operator
 
 @app.route('/')
