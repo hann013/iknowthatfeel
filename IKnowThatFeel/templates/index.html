@@ -9,6 +9,7 @@
 </head>
 
 <body>
+
     <h1>{{ title }}</h1>
     <p>Welcome to our app!</p>
     {% if not session.logged_in %}
@@ -17,4 +18,27 @@
     {% else %}
       <a href="{{ url_for('logout') }}">logout</a>
     {% endif %}
+    <div class="jumbotron" {
+  	position: relative;
+      background: #000 url("jumbotron-bg.png") center center;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      overflow: hidden;}>
+
+      <h1>{{ title }}<h1>
+
+  	</div>
+      <p>Can you mimic the emotion on the face you see?</p>
+      <p>Someone who is on the autistic spectrum might not be able to do so, leading to difficulty in communicating empathy to others.</p>
+      <p> This game is intended to help kids and adults on the spectrum differentiate between and demonstrate different emotional expressions,</p>
+      <a href="/game?count=1" class="btn btn-default">Play 10 rounds</a>
+
+      <div class="media">
+    <div class="media-middle media-middle">
+      <a href="#">
+        <img class="media-object" src="http://churchm.ag/wp-content/uploads/2012/02/I-know-that-feel-bro-tights-620x620.jpg" alt="...">
+      </a>
+    </div>
+  </div>
 </body>
