@@ -21,7 +21,7 @@ def game():
 	"""Renders the game page."""
 	count = int(request.args["count"])
 	emotions = ["Happy",  "Sad", "Angry", "Fear", "Surprise"]
-	r = randint(0, len(emotions)) 
+	r = randint(0, len(emotions)-1) 
 
 	if count <= 10:
 		return render_template(
