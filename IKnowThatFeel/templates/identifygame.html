@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <div class="jumbotron" id="heading-no-nav">
+    <div class="page-header" id="heading-no-nav">
         <h1>Game {{ count }}</h1>
         <h2> Match the emotion in the picture to a word.</h2>
     </div>
@@ -92,7 +92,7 @@
             $.post(url, params)
               .done(function(data) {
                 console.log(data);
-                $("#feedback").text(data["feedback"]);
+                $("#feedback").text(data["feedback"]).show();
 
                 if (data["feedback"] == "You are correct!") {
                     $("#next-level").show();

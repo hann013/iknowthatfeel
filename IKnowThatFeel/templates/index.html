@@ -39,12 +39,12 @@
 		</div>
     {% if session.logged_in %}
       <div class="row">
-        <button class="btn btn-default btn-lg">Play Game 1</button>
-        <button class="btn btn-default btn-lg">View Stats</button>
+        <a class="btn btn-default btn-lg" href="/game?count=1">Play Game 1</a>
+        <a class="btn btn-default btn-lg" href="/stats">View Stats</a>
       </div>
       <div class="row">
-        <button class="btn btn-default btn-lg">Play Game 2</button>
-        <button class="btn btn-default btn-lg">Log Out</button>
+        <a class="btn btn-default btn-lg" href="/identifygame?count=1">Play Game 2</a>
+        <a class="btn btn-default btn-lg" href="/logout">Log Out</a>
       </div>
     {% else %}
       <div class="row">

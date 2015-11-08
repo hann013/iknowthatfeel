@@ -8,7 +8,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
 from contextlib import closing
 from IKnowThatFeel import app
 from random import randint
-import indicoio, operator
+import indicoio, operator, uuid
 
 @app.route('/')
 @app.route('/home')
@@ -63,26 +63,27 @@ def new_user():
         return redirect(url_for('home'))
     return render_template('new_user.html')
 
-@app.route('/game', methods=['GET','POST'])
+@app.route('/game')
 def game():
-
-    if request.method=='POST':
-        g.db.execute('insert into playthrough (score,playerid) values (?,?)',[count,globalID])
-        g.db.commit()
-        return render_template('index.html')
-    #else:
     """Renders the game page."""
     count = int(request.args["count"])
+
+    if count == 1:
+        session["game_id"] = str(uuid.uuid4())
+
     emotions = ["Happy",  "Sad", "Angry", "Fear", "Surprise"]
     r = randint(0, len(emotions)-1)
     if count <= 10:
-		return render_template('game.html', count=count, emotion=emotions[r])
+        return render_template('game.html', count=count, emotion=emotions[r])
     else:
-		return redirect('/home')
+        return redirect('/home')
 
 @app.route('/identifygame')
 def identifygame():
     count = int(request.args["count"])
+
+    if count == 1:
+        session["game_id"] = str(uuid.uuid4())
 
     if count <= 10:
         return render_template(
@@ -94,46 +95,53 @@ def identifygame():
 
 @app.route('/indicoChoice', methods=['POST'])
 def indicoChoice():
-	correctEmotion = request.form["correctEmotion"]
-	userChoice = request.form["userChoice"]
+    correctEmotion = request.form["correctEmotion"]
+    userChoice = request.form["userChoice"]
 
-	result = {}
+    result = {}
 
-	if userChoice == correctEmotion:
-		result["feedback"] = "You are correct!"
-	else:
-		result["feedback"] = "Not quite - try again!"
-	return jsonify(result)
+    if userChoice == correctEmotion:
+        result["feedback"] = "You are correct!"
+        g.db.execute('insert into playthrough (score,playerid,gameid) values (?,?,?)',[1, globalID, session["game_id"]])
+    else:
+        result["feedback"] = "Not quite - try again!"
+        g.db.execute('insert into playthrough (score,playerid,gameid) values (?,?,?)',[0, globalID, session["game_id"]])
+    
+    g.db.commit()
+    return jsonify(result)
 
 
 @app.route('/indico', methods=['POST'])
 def indico():
-	indicoio.config.api_key = "3e19af4454ebe0932333aff84913d88d"
-	gameCount = request.form["gameCount"]
-	emotion = request.form["emotion"]
-	photoUrl = request.form["photoUrl"]
+    indicoio.config.api_key = "3e19af4454ebe0932333aff84913d88d"
+    gameCount = request.form["gameCount"]
+    emotion = request.form["emotion"]
+    photoUrl = request.form["photoUrl"]
 
-	result = {}
+    result = {}
 
-	emotions = indicoio.fer(photoUrl, detect=True, sensitivity=0.4)[0]['emotions']
+    emotions = indicoio.fer(photoUrl, detect=True, sensitivity=0.4)[0]['emotions']
 
-	highestVals = {}
-	highestVals["happyVal"] = emotions["Happy"] + emotions["Neutral"]
-	highestVals["sadVal"] = emotions["Sad"] + emotions["Angry"]
-	highestVals["fearVal"] = emotions["Fear"] + emotions["Surprise"]
+    highestVals = {}
+    highestVals["happyVal"] = emotions["Happy"] + emotions["Neutral"]
+    highestVals["sadVal"] = emotions["Sad"] + emotions["Angry"]
+    highestVals["fearVal"] = emotions["Fear"] + emotions["Surprise"]
 
-	highestValsKey = max(highestVals.iteritems(), key=operator.itemgetter(1))[0]
-	highestKeys = max(emotions.iteritems(), key=operator.itemgetter(1))
+    highestValsKey = max(highestVals.iteritems(), key=operator.itemgetter(1))[0]
+    highestKeys = max(emotions.iteritems(), key=operator.itemgetter(1))
 
-	for highestKey in highestKeys:
-		if (highestKey == "Happy" or highestKey == "Neutral" and highestValsKey == "happyVal") or (highestKey == "Sad" or highestKey == "Angry" and highestValsKey == "sadVal") or (highestKey == "Fear" or highestKey == "Surprise" and highestValsKey == "fearVal"):
-			if highestKey == emotion:
-				result["feedback"] = "You are correct!"
-			else:
-				result["feedback"] = "Not quite - try again!"
-			result[highestKey] = emotions[highestKey]
-			return jsonify(result)
+    for highestKey in highestKeys:
+        if (highestKey == "Happy" or highestKey == "Neutral" and highestValsKey == "happyVal") or (highestKey == "Sad" or highestKey == "Angry" and highestValsKey == "sadVal") or (highestKey == "Fear" or highestKey == "Surprise" and highestValsKey == "fearVal"):
+            if highestKey == emotion:
+                result["feedback"] = "You are correct!"
+                g.db.execute('insert into playthrough (score,playerid,gameid) values (?,?,?)',[1, globalID, session["game_id"]])
+            else:
+                result["feedback"] = "Not quite - try again!"
+                g.db.execute('insert into playthrough (score,playerid,gameid) values (?,?,?)',[0, globalID, session["game_id"]])
+            g.db.commit()
+            result[highestKey] = emotions[highestKey]
+            return jsonify(result)
 
-	highestKey = highestKeys[0]
-	result[highestKey] = emotions[highestKey]
-	return jsonify(result)
+    highestKey = highestKeys[0]
+    result[highestKey] = emotions[highestKey]
+    return jsonify(result)

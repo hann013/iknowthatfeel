@@ -11,5 +11,6 @@ create table playthrough(
   id integer primary key autoincrement,
   score integer,
   playerid integer,
+  gameid text,
   foreign key  (playerid) references users(id)
 );
