@@ -1,4 +1,4 @@
-body { 
+body {
 	background: url("background.jpg") center fixed;
 	background-size: cover;
 	text-align: center;
@@ -10,7 +10,7 @@ body {
     margin-bottom: 15px;
     font-size: 1.5em;
     border-radius: 8px;
-    background-color: #486EE0;	
+    background-color: #486EE0;
     color: white;
 	font-family: 'Raleway', sans-serif;
 }
@@ -83,4 +83,8 @@ h3.name {
 
 h4.university {
 	color: #1F3A93;
+}
+
+#graph{
+	max-width: 100%;
 }

@@ -9,6 +9,9 @@ from contextlib import closing
 from IKnowThatFeel import app
 from random import randint
 import indicoio, operator, uuid
+import numpy as np
+import matplotlib.pyplot as plt
+from pylab import savefig
 
 @app.route('/')
 @app.route('/home')
@@ -38,9 +41,13 @@ def login():
             error = 'Invalid password'
         else:
             session['logged_in'] = True
+            session['username']=request.form['username']
             globalName=name[0]
             globalID=(g.db.execute('select id from users where username=?',[name[0]])).fetchone()[0]
             print globalID
+            session['userid']=globalID
+            print "session userid"
+            print session['userid']
             flash('You were logged in')
             return redirect(url_for('home'))
     return render_template('index.html', error=error)
@@ -70,6 +77,52 @@ def abouttheproject():
 @app.route('/aboutus')
 def aboutus():
     return render_template('aboutus.html')
+
+@app.route('/stats',methods=['GET'])
+def stats():
+    if not session.get('logged_in'):
+        abort(401)
+
+    cur = g.db.cursor()
+    scoreList=[]
+    # the result of a "cursor.execute" can be iterated over by row
+    for row in cur.execute('select gameid,score,count(*) from playthrough where playerid=? group by gameid,score',[session['userid']]):
+        print row
+        scoreList.append(row)
+    print scoreList
+
+    zeroes=[]
+    ones=[]
+    pct=[]
+    for x in range(0,len(scoreList)):
+        if(scoreList[x][1]==0):
+            zeroes.append(scoreList[x][2]*1.0)
+        if(scoreList[x][1]==1):
+            ones.append(scoreList[x][2]*1.0)
+    print zeroes
+    print ones
+    for x in range(0,len(ones)):
+        pct.append(ones[x]/(zeroes[x]+ones[x]))
+    print pct
+
+    n_groups = len(pct)
+    fig, ax = plt.subplots()
+    index = np.arange(n_groups)
+    bar_width = 0.35
+    opacity = 0.4
+    rects1 = plt.bar(index, pct, bar_width,
+                     alpha=opacity,
+                     color='b',
+                     label='Accuracy Percentage')
+
+    plt.xlabel('Game')
+    plt.ylabel('Percentage Correct')
+    plt.title('Dank Graph of PWu')
+    plt.legend()
+    plt.tight_layout()
+    savefig('IKnowThatFeel/static/content/graph.png')
+
+    return render_template('stats.html')
 
 @app.route('/game')
 def game():
@@ -110,11 +163,11 @@ def indicoChoice():
 
     if userChoice == correctEmotion:
         result["feedback"] = "You are correct!"
-        g.db.execute('insert into playthrough (score,playerid,gameid) values (?,?,?)',[1, globalID, session["game_id"]])
+        g.db.execute('insert into playthrough (score,playerid,gameid) values (?,?,?)',[1, session['userid'], session["game_id"]])
     else:
         result["feedback"] = "Not quite - try again!"
-        g.db.execute('insert into playthrough (score,playerid,gameid) values (?,?,?)',[0, globalID, session["game_id"]])
-    
+        g.db.execute('insert into playthrough (score,playerid,gameid) values (?,?,?)',[0, session['userid'], session["game_id"]])
+
     g.db.commit()
     return jsonify(result)
 
@@ -142,10 +195,10 @@ def indico():
         if (highestKey == "Happy" or highestKey == "Neutral" and highestValsKey == "happyVal") or (highestKey == "Sad" or highestKey == "Angry" and highestValsKey == "sadVal") or (highestKey == "Fear" or highestKey == "Surprise" and highestValsKey == "fearVal"):
             if highestKey == emotion:
                 result["feedback"] = "You are correct!"
-                g.db.execute('insert into playthrough (score,playerid,gameid) values (?,?,?)',[1, globalID, session["game_id"]])
+                g.db.execute('insert into playthrough (score,playerid,gameid) values (?,?,?)',[1, session['userid'], session["game_id"]])
             else:
                 result["feedback"] = "Not quite - try again!"
-                g.db.execute('insert into playthrough (score,playerid,gameid) values (?,?,?)',[0, globalID, session["game_id"]])
+                g.db.execute('insert into playthrough (score,playerid,gameid) values (?,?,?)',[0, session['userid'], session["game_id"]])
             g.db.commit()
             result[highestKey] = emotions[highestKey]
             return jsonify(result)
