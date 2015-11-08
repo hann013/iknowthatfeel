@@ -62,26 +62,22 @@ def new_user():
         return redirect(url_for('home'))
     return render_template('new_user.html')
 
-@app.route('/game', methods = ['GET','POST'])
+@app.route('/game', methods=['GET','POST'])
 def game():
+
     if request.method=='POST':
         g.db.execute('insert into playthrough (score,playerid) values (?,?)',[count,globalID])
         g.db.commit()
         return render_template('index.html')
+    #else:
+    """Renders the game page."""
+    count = int(request.args["count"])
+    emotions = ["Happy",  "Sad", "Angry", "Fear", "Surprise"]
+    r = randint(0, len(emotions)-1)
+    if count <= 10:
+		return render_template('game.html',count=count,emotion=emotions[r])
     else:
-    	"""Renders the game page."""
-    	count = int(request.args["count"])
-    	emotions = ["Happy",  "Sad", "Angry", "Fear", "Surprise"]
-    	r = randint(0, len(emotions))
-
-    	if count <= 10:
-    		return render_template(
-    			'game.html',
-    			count=count,
-    			emotion=emotions[r]
-    			)
-    	else:
-    		return redirect('/home')
+		return redirect('/home')
 
 @app.route('/indico', methods=['POST'])
 def indico():
