@@ -27,16 +27,19 @@
 <body>
   	<nav class="navbar navbar-default navbar-fixed-top">
   	    <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+            </ul>
   	        <ul class="nav navbar-nav navbar-right">
-  	            <li><a class="heading" href="#">About the Project</a></li>
-  	            <li><a href="#">About Us</a></li>
+  	            <li><a href="/abouttheproject">About the Project</a></li>
+  	            <li><a href="/aboutus">About Us</a></li>
   	        </ul>
   	  	</div><!-- /.container-fluid -->
   	</nav>
+    <div class="page-header" id="heading">
+        <h1>{{ title }}<h1>
+    </div>
 	<div class="container">
-		<div class="page-header" id="heading">
-		    <h1>{{ title }}<h1>
-		</div>
     {% if session.logged_in %}
       <div class="row">
         <a class="btn btn-default btn-lg" href="/game?count=1">Play Game 1</a>

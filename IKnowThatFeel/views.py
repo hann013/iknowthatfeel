@@ -63,6 +63,14 @@ def new_user():
         return redirect(url_for('home'))
     return render_template('new_user.html')
 
+@app.route('/abouttheproject')
+def abouttheproject():
+    return render_template('abouttheproject.html')
+
+@app.route('/aboutus')
+def aboutus():
+    return render_template('aboutus.html')
+
 @app.route('/game')
 def game():
     """Renders the game page."""

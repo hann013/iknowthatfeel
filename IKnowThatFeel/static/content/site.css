@@ -28,7 +28,7 @@ body {
 .page-header#heading {
 	padding: 1em;
 	color: #1F3A93;
-	margin-bottom: 2em;
+	margin-bottom: 3em;
 	font-family: 'Raleway', sans-serif;
 	text-align: center;
 }
@@ -50,4 +50,37 @@ span#emotion {
 .alert {
 	display: inline-block;
 	font-family: 'Raleway', sans-serif;
+}
+
+.well {
+	font-family: 'Raleway', sans-serif;
+	font-size: 1.25em;
+	opacity: 0.9;	
+}
+
+span#title {
+	color: #1F3A93;
+}
+
+.page-header h2#heading {
+	color: white;
+	opacity: 0.9;
+}
+
+.container {
+	font-family: 'Raleway', sans-serif;
+}
+
+.container p {
+	font-size: 1em;
+	color: black;
+}
+
+h3.name {
+	color: #486EE0;
+	font-weight: bold;
+}
+
+h4.university {
+	color: #1F3A93;
 }
