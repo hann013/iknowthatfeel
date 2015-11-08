@@ -1,4 +1,4 @@
-body { 
+body {
 	background: url("background.jpg") center fixed;
 	background-size: cover;
 	text-align: center;
@@ -10,7 +10,7 @@ body {
     margin-bottom: 15px;
     font-size: 1.5em;
     border-radius: 8px;
-    background-color: #486EE0;	
+    background-color: #486EE0;
     color: white;
 	font-family: 'Raleway', sans-serif;
 }
@@ -50,4 +50,8 @@ span#emotion {
 .alert {
 	display: inline-block;
 	font-family: 'Raleway', sans-serif;
+}
+
+#graph{
+	max-width: 100%;
 }
