@@ -10,7 +10,7 @@ drop table if exists playthrough;
 create table playthrough(
   id integer primary key autoincrement,
   score integer,
-  playerid integer,
   gameid text,
+  playerid integer,
   foreign key  (playerid) references users(id)
 );
