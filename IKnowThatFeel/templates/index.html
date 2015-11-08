@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
     <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css" />
     <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    
 </head>
 
 <body>
@@ -25,6 +26,24 @@
 		<div class="row">
 			<button class="btn btn-default btn-lg">Log In</button>
 		</div>
+    <div class="row">
+      <div class="well col-md-4 col-md-offset-4">
+      {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+      <form action="{{ url_for('login') }}" method=post>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name=username class="form-control" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" name=password class="form-control"placeholder="Password">
+          </div>
+          <button type="submit" class="btn btn-success" value=Login>Submit</button>
+
+      </form>
+    </div>
+    </div>
+
 		<div class="row">
 			<button class="btn btn-default btn-lg">Sign Up</button>
 		</div>
