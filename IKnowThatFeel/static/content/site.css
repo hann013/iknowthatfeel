@@ -1,5 +1,5 @@
 body { 
-	background: url("http://wallpaperspal.com/wp-content/uploads/Minimalist-Colorful-Crystal-Vector-Wallpaper.jpg") center fixed;
+	background: url("background.jpg") center fixed;
 	background-size: cover;
 	text-align: center;
 }
@@ -10,13 +10,14 @@ body {
     margin-bottom: 15px;
     font-size: 1.5em;
     border-radius: 8px;
-    background-color: #8FD2EC;	
+    background-color: #486EE0;	
     color: white;
 	font-family: 'Raleway', sans-serif;
 }
 
 .navbar .container-fluid {
 	background-color: #486EE0;
+	opacity: 0.7;
 }
 
 .navbar-nav a {
@@ -24,15 +25,29 @@ body {
 	font-family: 'Raleway', sans-serif;
 }
 
-.jumbotron#heading {
-	padding: 2em;
-	padding-top: 5em;
+.page-header#heading {
+	padding: 1em;
 	color: #1F3A93;
-	margin-bottom: 3em;
+	margin-bottom: 2em;
 	font-family: 'Raleway', sans-serif;
 	text-align: center;
 }
 
-#heading h1 {
+.page-header#heading-no-nav {
+	color: #1F3A93;
+	font-family: 'Raleway', sans-serif;
+	text-align: center;
+}
+
+#heading h1, #heading-no-nav h1 {
 	font-size: 3.5em;
+}
+
+span#emotion {
+	color: #F5CD2D;
+}
+
+.alert {
+	display: inline-block;
+	font-family: 'Raleway', sans-serif;
 }

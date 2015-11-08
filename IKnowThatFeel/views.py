@@ -76,9 +76,35 @@ def game():
     emotions = ["Happy",  "Sad", "Angry", "Fear", "Surprise"]
     r = randint(0, len(emotions)-1)
     if count <= 10:
-		return render_template('game.html',count=count,emotion=emotions[r])
+		return render_template('game.html', count=count, emotion=emotions[r])
     else:
 		return redirect('/home')
+
+@app.route('/identifygame')
+def identifygame():
+    count = int(request.args["count"])
+
+    if count <= 10:
+        return render_template(
+            'identifygame.html',
+            count=count
+            )
+    else:
+        return redirect('/home')
+
+@app.route('/indicoChoice', methods=['POST'])
+def indicoChoice():
+	correctEmotion = request.form["correctEmotion"]
+	userChoice = request.form["userChoice"]
+
+	result = {}
+
+	if userChoice == correctEmotion:
+		result["feedback"] = "You are correct!"
+	else:
+		result["feedback"] = "Not quite - try again!"
+	return jsonify(result)
+
 
 @app.route('/indico', methods=['POST'])
 def indico():

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game {{ count }}</title>
+    <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css" />
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+</head>
+
+<body>
+    <div class="jumbotron" id="heading-no-nav">
+        <h1>Game {{ count }}</h1>
+        <h2> Match the emotion in the picture to a word.</h2>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="alert alert-warning" role="alert" style="display:none;" id="feedback"></div>
+        </div>
+        <a class="btn btn-default btn-lg" id="next-level" style="display:none;" href="/identifygame?count={{ count + 1 }}">
+        {% if count == 10 %}
+            Finish game
+        {% else %}
+            Next level
+        {% endif %}
+        </a>
+        <div id="photo"></div>
+        <div id="buttons">
+            <br/>
+            <button value="Happy" class="btn btn-default btn-lg">Happy</button>
+            <button value="Sad" class="btn btn-default btn-lg">Sad</button>
+            <button value="Angry" class="btn btn-default btn-lg">Angry</button>
+            <button value="Surprise" class="btn btn-default btn-lg">Surprise</button>
+            <button value="Fear" class="btn btn-default btn-lg">Fear</button>
+        </div>
+    </div>
+</body>
+
+
+<script type"text/javascript">
+    window.onload = function() {
+        var flickr = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=764a4955d5ea19e5e7ca0b4a8f9603a7&format=json&jsoncallback=?";
+
+        var keywords = [{'Happy': 'smiling, person'}, {'Angry': 'angry, person'},{'Fear':'terrified, person'}, {'Surprise':'surprised, person'}, {'Sad':'crying, person'}];
+
+        var emotionchosen = Math.floor(Math.random() * 4);
+        var tags = keywords[emotionchosen];
+        var correctEmotion = Object.keys(tags)[0];
+        console.log(correctEmotion);
+        var params = {};
+        var photoUrl = null;
+
+        params["per_page"] = 500;
+        params["tag_mode"] = "all";
+        params["tags"] = tags[correctEmotion];
+
+         $.getJSON(flickr, params, function(data){
+            var whichImage = Math.floor(Math.random() * data['photos']['photo'].length);
+
+            console.log(data['photos']['photo']);
+
+            var object = data['photos']['photo'][whichImage];
+
+            while (!object) {
+                whichImage = Math.floor(Math.random() * data['photos']['photo'].length);
+                object = data['photos']['photo'][whichImage];
+            }
+
+            var photo = document.createElement("img");
+            var farmid = object['farm'];
+            var id = object['id'];
+            var serverid = object['server'];
+            var secret = object['secret'];
+
+            photoUrl = photoLink(farmid, id, serverid, secret);
+            photo.setAttribute('src', photoUrl);
+            photo.setAttribute('alt','photo of emotion');
+         
+            document.getElementById("photo").appendChild(photo);    
+        });
+
+        $("button").click(function() {
+            var url = "/indicoChoice";
+            var params = { 
+                correctEmotion : correctEmotion,
+                userChoice : $(this).val(),
+                photoUrl : photoUrl
+                };
+
+            $.post(url, params)
+              .done(function(data) {
+                console.log(data);
+                $("#feedback").text(data["feedback"]);
+
+                if (data["feedback"] == "You are correct!") {
+                    $("#next-level").show();
+                    $("button").hide();
+                }
+            })
+              .fail(function(data) {
+                $("#feedback").text("Not quite - try again!");
+              }); 
+        })
+    }
+
+    function photoLink(farmid, id, serverid, secret) {
+        return "https://farm" + farmid + ".staticflickr.com/" + serverid + "/" + id + "_" + secret + ".jpg";
+    }
+</script>
