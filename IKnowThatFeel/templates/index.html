@@ -6,64 +6,28 @@
     <title>{{ title }}</title>
     <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
     <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css" />
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
-  <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display
-    <div class="navbar-header"><a class="navbar-brand" href="#">{{title}}</a></div>
-    -->
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li><a href="#">About the Project</a></li>
-        <li><a href="{{url_for('new_user')}}">Create Account</a></li>
-        {% if session.logged_in %}
-          <li><a href="/game?count=1">Play 10 rounds</a></li>
-        {% endif %}
-      </ul>
-
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          {% if not session.logged_in %}
-            <a href="{{ url_for('login') }}">log in</a>
-          {% else %}
-            <a href="{{ url_for('logout') }}">logout</a>
-          {% endif %}
-      </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-
-<div class="container">
-  <div class="jumbotron" {
-  position: relative;
-    background: #000 url("jumbotron-bg.png") center center;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    overflow: hidden;}>
-
-    <h1>{{ title }}<h1>
-
-  </div>
-    <p>Can you mimic the emotion on the face you see?</p>
-    <p>Someone who is on the autistic spectrum might not be able to do so, leading to difficulty in communicating empathy to others.</p>
-    <p> This game is intended to help kids and adults on the spectrum differentiate between and demonstrate different emotional expressions,</p>
-
-    <div class="media">
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-        <div class="media-middle media-middle">
-          <a href="#">
-            <img class="media-object" src="http://churchm.ag/wp-content/uploads/2012/02/I-know-that-feel-bro-tights-620x620.jpg" alt="...">
-          </a>
-        </div>
-      </div>
-    </div>
-    </div>
-</div>
-
+  	<nav class="navbar navbar-default navbar-fixed-top">
+	    <div class="container-fluid">
+	        <ul class="nav navbar-nav navbar-right">
+	            <li><a class="heading" href="#">About the Project</a></li>
+	            <li><a href="#">About Us</a></li>
+	        </ul>
+	  	</div><!-- /.container-fluid -->
+	</nav>
+	<div class="container">
+		<div class="jumbotron" id="heading">
+		    <h1>{{ title }}<h1>
+		</div>
+		<div class="row">
+			<button class="btn btn-default btn-lg">Log In</button>
+		</div>
+		<div class="row">
+			<button class="btn btn-default btn-lg">Sign Up</button>
+		</div>
+			<a href="/game?count=1">Play 10 rounds</a>
+	</div>
 </body>

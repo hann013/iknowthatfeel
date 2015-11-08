@@ -12,4 +12,4 @@ create table playthrough(
   score integer,
   playerid integer,
   foreign key  (playerid) references users(id)
-)
+);

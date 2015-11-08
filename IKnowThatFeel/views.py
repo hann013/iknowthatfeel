@@ -18,28 +18,24 @@ def home():
         'index.html',
         title='I Know That Feel'
     )
-globalName=""
-globalID=0
-count=0
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
         name_cursor=g.db.execute('select username from users where username=?',[request.form['username']])
         password_cursor = g.db.execute('select password from users where username=?',[request.form['username']])
-        name=name_cursor.fetchone()
-        password=password_cursor.fetchone()
-        print name[0]
-        print password[0]
-        if name[0] is None:
+
+        if name_cursor.fetchone() is not None:
+            name=name_cursor.fetchone()[0]
+            password=password_cursor.fetchone()[0]
+
+        if name_cursor.fetchone() is None:
             error = 'Invalid username'
-        elif password[0] != request.form['password']:
+        elif password != request.form['password']:
             error = 'Invalid password'
         else:
             session['logged_in'] = True
-            globalName=name[0]
-            globalID=(g.db.execute('select id from users where username=?',[name[0]])).fetchone()[0]
-            print globalID
             flash('You were logged in')
             return redirect(url_for('home'))
     return render_template('login.html', error=error)
